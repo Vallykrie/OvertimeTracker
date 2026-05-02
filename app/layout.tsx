@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Overtime Tracker",
+  title: "Aching sayang Nathan",
   description:
-    "Track your overtime hours, calculate earnings, and stay on top of your monthly goals.",
+    "Nathan buat web untuk Aching sayangku menghitung lemburnya ❤️",
 };
 
 export default function RootLayout({
@@ -22,10 +22,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-screen w-screen overflow-hidden antialiased`}
+      className={`${inter.variable} h-screen w-screen antialiased`}
       suppressHydrationWarning
     >
-      <body className="h-screen w-screen overflow-hidden">
+      <body className="h-screen w-screen">
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Overtime Tracker
 
-## Getting Started
+A modern, single-page web application to track your overtime hours, calculate earnings, and monitor your monthly goals. Built with a focus on a premium, distraction-free user experience featuring a glassmorphism aesthetic.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*   **Google Authentication:** Secure and persistent login using NextAuth v5 (Auth.js) with Google OAuth.
+*   **Direct Hours Input:** Easily add or subtract overtime hours with a clean numerical input interface.
+*   **Monthly Goal Tracking:** Visual progress ring to monitor your tracked hours against your monthly target.
+*   **Earnings Calculation:** Automatically calculates your extra earnings based on your customizable hourly rate.
+*   **Premium UI:** Built with Tailwind CSS v4 and Framer Motion for smooth animations, micro-interactions, and a sleek dark/light mode glassmorphic design.
+*   **Timezone Aware:** Strictly respects local time (UTC+8) for accurate daily and monthly logging.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+*   **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **Styling:** [Tailwind CSS v4](https://tailwindcss.com/)
+*   **Components:** [shadcn/ui](https://ui.shadcn.com/)
+*   **Animations:** [Framer Motion](https://www.framer.com/motion/)
+*   **Authentication:** [NextAuth v5 (Auth.js)](https://authjs.dev/)
+*   **Database:** [MongoDB](https://www.mongodb.com/) via [Mongoose](https://mongoosejs.com/)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Getting Started
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+*   Node.js 18+
+*   A MongoDB database (e.g., MongoDB Atlas)
+*   Google OAuth credentials (Client ID and Secret)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1.  **Clone the repository and install dependencies:**
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+2.  **Environment Variables:**
+    Copy the `.env.local.example` file to `.env.local`:
+    ```bash
+    cp .env.local.example .env.local
+    ```
+    Fill in the required values:
+    *   `MONGODB_URI`: Your MongoDB connection string.
+    *   `NEXTAUTH_SECRET`: A secure random string (generate with `openssl rand -base64 32`).
+    *   `NEXTAUTH_URL`: `http://localhost:3000` (for local development).
+    *   `GOOGLE_CLIENT_ID`: Your Google OAuth Client ID.
+    *   `GOOGLE_CLIENT_SECRET`: Your Google OAuth Client Secret.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    *Note: Ensure your current IP address is whitelisted in your MongoDB Atlas Network Access settings.*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+4.  Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🔧 Configuration
+
+You can customize your default preferences directly in the app via the Settings gear icon:
+*   **Currency Symbol:** Set your preferred currency (e.g., NT$, $, €).
+*   **Hourly Rate:** Set how much you earn per hour of overtime.
+*   **Monthly Goal:** Set your target number of overtime hours for the month.

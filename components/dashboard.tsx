@@ -30,9 +30,9 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
   const totalHours = logs.reduce((sum, log) => sum + log.hours, 0);
 
   return (
-    <div className="relative flex h-screen w-screen flex-col mesh-gradient">
+    <div className="relative flex h-screen w-screen flex-col mesh-gradient overflow-hidden">
       {/* Floating background orbs */}
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl"
           animate={{ x: [0, 20, 0], y: [0, -15, 0] }}
@@ -46,7 +46,7 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 flex h-full flex-col gap-5 px-4 py-5 sm:mx-auto sm:max-w-lg sm:px-6 sm:py-6 md:max-w-xl">
+      <div className="relative z-10 flex h-full flex-col gap-5 px-4 py-10 sm:mx-auto sm:max-w-lg sm:px-6 sm:py-6 md:max-w-xl sm:py-5">
         {/* Header */}
         <Header user={user} settings={settings} />
 
