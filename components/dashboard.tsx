@@ -30,9 +30,9 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
   const totalHours = logs.reduce((sum, log) => sum + log.hours, 0);
 
   return (
-    <div className="relative flex h-screen w-screen flex-col overflow-hidden mesh-gradient">
+    <div className="relative flex h-screen w-screen flex-col mesh-gradient">
       {/* Floating background orbs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0">
         <motion.div
           className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl"
           animate={{ x: [0, 20, 0], y: [0, -15, 0] }}

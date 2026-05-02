@@ -5,25 +5,25 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { addOvertime } from "@/app/actions/overtime";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Minus, Loader2 } from "lucide-react";
 
 export function OvertimeController() {
   const [hours, setHours] = useState<string>("");
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = () => {
+  const handleSubmit = (isSubtract: boolean = false) => {
     const numHours = parseFloat(hours);
     if (isNaN(numHours) || numHours <= 0) return;
 
     startTransition(async () => {
-      await addOvertime(numHours);
+      await addOvertime(isSubtract ? -numHours : numHours);
       setHours("");
     });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleSubmit();
+      handleSubmit(false);
     }
   };
 
@@ -48,18 +48,32 @@ export function OvertimeController() {
         />
       </div>
 
-      <Button
-        onClick={handleSubmit}
-        disabled={isPending || !hours || parseFloat(hours) <= 0}
-        className="h-12 gap-2 rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40"
-      >
-        {isPending ? (
-          <Loader2 className="h-5 w-5 animate-spin" />
-        ) : (
-          <Plus className="h-5 w-5" />
-        )}
-        {isPending ? "Adding..." : "Add Hours"}
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={() => handleSubmit(true)}
+          disabled={isPending || !hours || parseFloat(hours) <= 0}
+          className="h-12 gap-2 rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40"
+        >
+          {isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Minus className="h-5 w-5" />
+          )}
+          {isPending ? "Decreasing..." : ""}
+        </Button>
+        <Button
+          onClick={() => handleSubmit(false)}
+          disabled={isPending || !hours || parseFloat(hours) <= 0}
+          className="h-12 gap-2 rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40"
+        >
+          {isPending ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            <Plus className="h-5 w-5" />
+          )}
+          {isPending ? "Adding..." : ""}
+        </Button>
+      </div>
     </motion.div>
   );
 }

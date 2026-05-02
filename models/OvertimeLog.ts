@@ -16,7 +16,7 @@ const OvertimeLogSchema = new Schema<IOvertimeLog>(
       index: true,
     },
     date: { type: Date, required: true },
-    hours: { type: Number, required: true, min: 0.5 },
+    hours: { type: Number, required: true },
   },
   { timestamps: true }
 );

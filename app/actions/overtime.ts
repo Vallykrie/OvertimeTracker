@@ -97,8 +97,8 @@ export async function addOvertime(hours: number) {
     throw new Error("Unauthorized");
   }
 
-  if (!hours || hours <= 0) {
-    throw new Error("Hours must be a positive number");
+  if (!hours || hours === 0) {
+    throw new Error("Hours cannot be zero");
   }
 
   await dbConnect();
