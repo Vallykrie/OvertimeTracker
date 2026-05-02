@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true, unique: true },
     image: { type: String },
     emailVerified: { type: Date, default: null },
-    hourlyRate: { type: Number, default: 0 },
+    hourlyRate: { type: Number, default: 220 },
     monthlyGoal: { type: Number, default: 60 },
     currency: { type: String, default: "NT$" },
   },

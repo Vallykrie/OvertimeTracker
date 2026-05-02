@@ -52,7 +52,7 @@ export function LoginCard() {
             transition={{ delay: 0.3 }}
             className="text-3xl font-bold tracking-tight"
           >
-            Overtime Tracker
+            Hai Sayangku
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -60,8 +60,8 @@ export function LoginCard() {
             transition={{ delay: 0.4 }}
             className="max-w-xs text-sm text-muted-foreground"
           >
-            Track your extra hours. Calculate your earnings. Stay on top of your
-            goals.
+            Yuk login dulu sayang, biar bisa liat berapa banyak uang yang sudah
+            sayang hasilkan dari lembur.
           </motion.p>
         </div>
 
