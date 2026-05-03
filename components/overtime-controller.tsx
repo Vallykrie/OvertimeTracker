@@ -7,7 +7,11 @@ import { Input } from "@/components/ui/input";
 import { addOvertime } from "@/app/actions/overtime";
 import { Plus, Minus, Loader2 } from "lucide-react";
 
-export function OvertimeController() {
+interface OvertimeControllerProps {
+  currentMonth: string;
+}
+
+export function OvertimeController({ currentMonth }: OvertimeControllerProps) {
   const [hours, setHours] = useState<string>("");
   const [isPending, startTransition] = useTransition();
 
@@ -16,7 +20,7 @@ export function OvertimeController() {
     if (isNaN(numHours) || numHours <= 0) return;
 
     startTransition(async () => {
-      await addOvertime(isSubtract ? -numHours : numHours);
+      await addOvertime(isSubtract ? -numHours : numHours, currentMonth);
       setHours("");
     });
   };

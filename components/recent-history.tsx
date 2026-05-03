@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { deleteOvertime } from "@/app/actions/overtime";
 import { Trash2, Clock, CalendarDays } from "lucide-react";
+import { format as formatDateFns } from "date-fns";
 
 interface LogEntry {
   _id: string;
@@ -15,6 +16,7 @@ interface LogEntry {
 
 interface RecentHistoryProps {
   logs: LogEntry[];
+  currentMonth: string;
 }
 
 const TIMEZONE = "Asia/Taipei";
@@ -75,8 +77,9 @@ function LogItem({ log, index }: { log: LogEntry; index: number }) {
   );
 }
 
-export function RecentHistory({ logs }: RecentHistoryProps) {
+export function RecentHistory({ logs, currentMonth }: RecentHistoryProps) {
   const recentLogs = logs.slice(0, 5);
+  const monthName = formatDateFns(new Date(`${currentMonth}-01T12:00:00`), "MMMM");
 
   return (
     <motion.div
@@ -90,7 +93,7 @@ export function RecentHistory({ logs }: RecentHistoryProps) {
           Recent Activity
         </h3>
         <span className="text-xs text-muted-foreground/60">
-          {logs.length} entries this month
+          {logs.length} entries in {monthName}
         </span>
       </div>
 
@@ -99,7 +102,7 @@ export function RecentHistory({ logs }: RecentHistoryProps) {
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Clock className="mb-2 h-6 w-6 text-muted-foreground/30" />
             <p className="text-sm text-muted-foreground/60">
-              No overtime logged yet this month
+              No overtime logged in {monthName}
             </p>
             <p className="text-xs text-muted-foreground/40">
               Add your first entry above

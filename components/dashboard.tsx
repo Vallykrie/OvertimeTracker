@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/header";
+import { MonthNavigation } from "@/components/month-navigation";
 import { MoneyDisplay } from "@/components/money-display";
 import { GoalRing } from "@/components/goal-ring";
 import { OvertimeController } from "@/components/overtime-controller";
@@ -24,9 +25,11 @@ interface DashboardProps {
     currency: string;
   };
   logs: LogEntry[];
+  currentMonth: string;
+  historicalStats: { month: string; totalHours: number }[];
 }
 
-export function Dashboard({ user, settings, logs }: DashboardProps) {
+export function Dashboard({ user, settings, logs, currentMonth, historicalStats }: DashboardProps) {
   const totalHours = logs.reduce((sum, log) => sum + log.hours, 0);
 
   return (
@@ -50,6 +53,14 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
         {/* Header */}
         <Header user={user} settings={settings} />
 
+        {/* Month Navigation */}
+        <MonthNavigation 
+          currentMonth={currentMonth} 
+          historicalStats={historicalStats}
+          hourlyRate={settings.hourlyRate}
+          currency={settings.currency}
+        />
+
         {/* Money + Goal section */}
         <div className="flex flex-1 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col items-center gap-6 sm:flex-row sm:justify-center sm:gap-10">
@@ -59,6 +70,7 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
                 totalHours={totalHours}
                 hourlyRate={settings.hourlyRate}
                 currency={settings.currency}
+                currentMonth={currentMonth}
               />
             </div>
 
@@ -71,10 +83,10 @@ export function Dashboard({ user, settings, logs }: DashboardProps) {
         </div>
 
         {/* Controller */}
-        <OvertimeController />
+        <OvertimeController currentMonth={currentMonth} />
 
         {/* Recent History */}
-        <RecentHistory logs={logs} />
+        <RecentHistory logs={logs} currentMonth={currentMonth} />
       </div>
     </div>
   );

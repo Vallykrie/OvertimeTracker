@@ -3,11 +3,13 @@
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect } from "react";
 import { TrendingUp } from "lucide-react";
+import { format } from "date-fns";
 
 interface MoneyDisplayProps {
   totalHours: number;
   hourlyRate: number;
   currency: string;
+  currentMonth: string;
 }
 
 function AnimatedNumber({ value }: { value: number }) {
@@ -31,8 +33,11 @@ export function MoneyDisplay({
   totalHours,
   hourlyRate,
   currency,
+  currentMonth,
 }: MoneyDisplayProps) {
   const totalEarnings = totalHours * hourlyRate;
+  
+  const monthName = format(new Date(`${currentMonth}-01T12:00:00`), "MMMM");
 
   return (
     <motion.div
@@ -43,7 +48,7 @@ export function MoneyDisplay({
     >
       <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">
         <TrendingUp className="h-3.5 w-3.5" />
-        Extra Earnings This Month
+        Extra Earnings {monthName}
       </div>
 
       <div className="flex items-baseline gap-1">

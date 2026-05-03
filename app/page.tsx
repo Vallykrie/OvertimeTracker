@@ -1,19 +1,33 @@
 import { auth } from "@/lib/auth";
-import { getMonthlyLogs, getUserSettings } from "@/app/actions/overtime";
+import { getMonthlyLogs, getUserSettings, getAllTimeStats } from "@/app/actions/overtime";
 import { LoginCard } from "@/components/login-card";
 import { Dashboard } from "@/components/dashboard";
 
-export default async function Home() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function Home(props: PageProps) {
+  const searchParams = await props.searchParams;
   const session = await auth();
 
   if (!session?.user) {
     return <LoginCard />;
   }
 
-  const [logs, settings] = await Promise.all([
-    getMonthlyLogs(),
+  const targetMonth = typeof searchParams.month === "string" ? searchParams.month : undefined;
+
+  const [logs, settings, historicalStats] = await Promise.all([
+    getMonthlyLogs(targetMonth),
     getUserSettings(),
+    getAllTimeStats(),
   ]);
+
+  const currentMonth = targetMonth || new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+  }).format(new Date());
 
   return (
     <Dashboard
@@ -23,6 +37,8 @@ export default async function Home() {
       }}
       settings={settings}
       logs={logs}
+      currentMonth={currentMonth}
+      historicalStats={historicalStats}
     />
   );
 }

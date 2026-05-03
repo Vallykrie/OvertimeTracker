@@ -22,10 +22,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-screen w-screen antialiased`}
+      className={`${inter.variable} h-screen w-screen overflow-hidden antialiased`}
       suppressHydrationWarning
     >
-      <body className="h-screen w-screen">
+      <body className="h-screen w-screen overflow-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>

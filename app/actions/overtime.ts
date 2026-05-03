@@ -5,6 +5,7 @@ import dbConnect from "@/lib/mongoose";
 import OvertimeLog from "@/models/OvertimeLog";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
+import mongoose from "mongoose";
 
 const TIMEZONE = "Asia/Taipei"; // UTC+8
 
@@ -32,17 +33,29 @@ function getTodayBoundaries(): { start: Date; end: Date } {
 
 /**
  * Get the current month boundaries in UTC+8 timezone.
+ * @param targetMonth Optional YYYY-MM string to get boundaries for a specific month
  */
-function getMonthBoundaries(): { start: Date; end: Date } {
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat("en-CA", {
-    timeZone: TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-  const localDateStr = formatter.format(now); // "2026-04-30"
-  const [year, month] = localDateStr.split("-").map(Number);
+function getMonthBoundaries(targetMonth?: string): { start: Date; end: Date } {
+  let year: number;
+  let month: number;
+
+  if (targetMonth && /^\d{4}-\d{2}$/.test(targetMonth)) {
+    const [y, m] = targetMonth.split("-").map(Number);
+    year = y;
+    month = m;
+  } else {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: TIMEZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const localDateStr = formatter.format(now); // "2026-04-30"
+    const parts = localDateStr.split("-").map(Number);
+    year = parts[0];
+    month = parts[1];
+  }
 
   const start = new Date(`${year}-${String(month).padStart(2, "0")}-01T00:00:00+08:00`);
 
@@ -67,7 +80,7 @@ function formatDateLocal(date: Date): string {
   }).format(date);
 }
 
-export async function getMonthlyLogs() {
+export async function getMonthlyLogs(targetMonth?: string) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
@@ -75,7 +88,7 @@ export async function getMonthlyLogs() {
 
   await dbConnect();
 
-  const { start, end } = getMonthBoundaries();
+  const { start, end } = getMonthBoundaries(targetMonth);
 
   const logs = await OvertimeLog.find({
     userId: session.user.id,
@@ -91,7 +104,7 @@ export async function getMonthlyLogs() {
   }));
 }
 
-export async function addOvertime(hours: number) {
+export async function addOvertime(hours: number, targetMonth?: string) {
   const session = await auth();
   if (!session?.user?.id) {
     throw new Error("Unauthorized");
@@ -103,9 +116,17 @@ export async function addOvertime(hours: number) {
 
   await dbConnect();
 
-  // Use the UTC+8 "today" as a noon timestamp to avoid boundary issues
-  const { start } = getTodayBoundaries();
-  const dateForLog = new Date(start.getTime() + 12 * 60 * 60 * 1000); // noon UTC+8
+  let dateForLog: Date;
+
+  if (targetMonth && /^\d{4}-\d{2}$/.test(targetMonth)) {
+    // If a specific month is targeted, log the entry to the 15th of that month at noon UTC+8
+    // This ensures it safely falls inside the month bounds regardless of timezone shifts
+    dateForLog = new Date(`${targetMonth}-15T12:00:00+08:00`);
+  } else {
+    // Default to today
+    const { start } = getTodayBoundaries();
+    dateForLog = new Date(start.getTime() + 12 * 60 * 60 * 1000); // noon UTC+8
+  }
 
   await OvertimeLog.create({
     userId: session.user.id,
@@ -179,4 +200,35 @@ export async function updateSettings(
   });
 
   revalidatePath("/");
+}
+
+export async function getAllTimeStats() {
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  await dbConnect();
+
+  const stats = await OvertimeLog.aggregate([
+    { $match: { userId: new mongoose.Types.ObjectId(session.user.id) } },
+    {
+      $group: {
+        _id: {
+          $dateToString: {
+            format: "%Y-%m",
+            date: "$date",
+            timezone: TIMEZONE,
+          },
+        },
+        totalHours: { $sum: "$hours" },
+      },
+    },
+    { $sort: { _id: -1 } }, // Sort descending by month
+  ]);
+
+  return stats.map((stat) => ({
+    month: stat._id,
+    totalHours: stat.totalHours,
+  }));
 }
