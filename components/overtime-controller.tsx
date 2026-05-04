@@ -41,7 +41,7 @@ export function OvertimeController({ currentMonth }: OvertimeControllerProps) {
       <div className="flex flex-1 items-center gap-3">
         <Input
           type="number"
-          placeholder="Hours (e.g. 2.5)"
+          placeholder="Input overtime hours here (e.g. 2.5)"
           value={hours}
           onChange={(e) => setHours(e.target.value)}
           onKeyDown={handleKeyDown}
