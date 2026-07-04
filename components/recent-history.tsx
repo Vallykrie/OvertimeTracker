@@ -96,7 +96,7 @@ export function RecentHistory({ logs, currentMonth }: RecentHistoryProps) {
         </span>
       </div>
 
-      <div className="glass max-h-[265px] overflow-y-auto scrollbar-hide rounded-2xl">
+      <div className="glass max-h-[260px] overflow-y-auto rounded-2xl">
         {logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Clock className="mb-2 h-6 w-6 text-muted-foreground/30" />
