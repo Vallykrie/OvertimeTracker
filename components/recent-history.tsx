@@ -78,7 +78,6 @@ function LogItem({ log, index }: { log: LogEntry; index: number }) {
 }
 
 export function RecentHistory({ logs, currentMonth }: RecentHistoryProps) {
-  const recentLogs = logs.slice(0, 5);
   const monthName = formatDateFns(new Date(`${currentMonth}-01T12:00:00`), "MMMM");
 
   return (
@@ -97,8 +96,8 @@ export function RecentHistory({ logs, currentMonth }: RecentHistoryProps) {
         </span>
       </div>
 
-      <div className="glass overflow-hidden rounded-2xl">
-        {recentLogs.length === 0 ? (
+      <div className="glass max-h-[265px] overflow-y-auto scrollbar-hide rounded-2xl">
+        {logs.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Clock className="mb-2 h-6 w-6 text-muted-foreground/30" />
             <p className="text-sm text-muted-foreground/60">
@@ -110,7 +109,7 @@ export function RecentHistory({ logs, currentMonth }: RecentHistoryProps) {
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
-            {recentLogs.map((log, index) => (
+            {logs.map((log, index) => (
               <LogItem key={log._id} log={log} index={index} />
             ))}
           </AnimatePresence>
