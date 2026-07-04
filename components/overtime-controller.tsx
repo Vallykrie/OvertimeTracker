@@ -13,15 +13,21 @@ interface OvertimeControllerProps {
 
 export function OvertimeController({ currentMonth }: OvertimeControllerProps) {
   const [hours, setHours] = useState<string>("");
+  const [activeAction, setActiveAction] = useState<"add" | "subtract" | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const handleSubmit = (isSubtract: boolean = false) => {
     const numHours = parseFloat(hours);
     if (isNaN(numHours) || numHours <= 0) return;
 
+    setActiveAction(isSubtract ? "subtract" : "add");
     startTransition(async () => {
-      await addOvertime(isSubtract ? -numHours : numHours, currentMonth);
-      setHours("");
+      try {
+        await addOvertime(isSubtract ? -numHours : numHours, currentMonth);
+        setHours("");
+      } finally {
+        setActiveAction(null);
+      }
     });
   };
 
@@ -30,6 +36,9 @@ export function OvertimeController({ currentMonth }: OvertimeControllerProps) {
       handleSubmit(false);
     }
   };
+
+  const isSubtracting = isPending && activeAction === "subtract";
+  const isAdding = isPending && activeAction === "add";
 
   return (
     <motion.div
@@ -56,26 +65,30 @@ export function OvertimeController({ currentMonth }: OvertimeControllerProps) {
         <Button
           onClick={() => handleSubmit(true)}
           disabled={isPending || !hours || parseFloat(hours) <= 0}
+          aria-label="Subtract overtime hours"
+          title="Subtract overtime hours"
           className="h-12 gap-2 rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40"
         >
-          {isPending ? (
+          {isSubtracting ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <Minus className="h-5 w-5" />
           )}
-          {isPending ? "Decreasing..." : ""}
+          {isSubtracting ? "Decreasing..." : ""}
         </Button>
         <Button
           onClick={() => handleSubmit(false)}
           disabled={isPending || !hours || parseFloat(hours) <= 0}
+          aria-label="Add overtime hours"
+          title="Add overtime hours"
           className="h-12 gap-2 rounded-xl bg-primary px-6 text-base font-semibold text-primary-foreground shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.97] disabled:opacity-40"
         >
-          {isPending ? (
+          {isAdding ? (
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <Plus className="h-5 w-5" />
           )}
-          {isPending ? "Adding..." : ""}
+          {isAdding ? "Adding..." : ""}
         </Button>
       </div>
     </motion.div>
