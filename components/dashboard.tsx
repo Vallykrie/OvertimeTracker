@@ -48,8 +48,10 @@ export function Dashboard({ user, settings, logs, currentMonth, historicalStats 
         />
       </div>
 
-      {/* Main content */}
-      <div className="relative z-10 flex h-full flex-col gap-5 px-4 py-10 sm:mx-auto sm:max-w-lg sm:px-6 sm:py-6 md:max-w-xl sm:py-5">
+      {/* Scrollable container */}
+      <div className="relative z-10 h-full w-full overflow-y-auto scrollbar-hide">
+        {/* Main content */}
+        <div className="flex min-h-full flex-col gap-5 px-4 py-10 sm:mx-auto sm:max-w-lg sm:px-6 sm:py-6 md:max-w-xl sm:py-5">
         {/* Header */}
         <Header user={user} settings={settings} />
 
@@ -87,6 +89,7 @@ export function Dashboard({ user, settings, logs, currentMonth, historicalStats 
 
         {/* Recent History */}
         <RecentHistory logs={logs} currentMonth={currentMonth} />
+        </div>
       </div>
     </div>
   );

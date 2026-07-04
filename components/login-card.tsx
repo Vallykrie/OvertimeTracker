@@ -8,7 +8,7 @@ import { Clock, Sparkles } from "lucide-react";
 
 export function LoginCard() {
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center mesh-gradient">
+    <div className="relative flex h-screen w-screen items-center justify-center mesh-gradient overflow-y-auto scrollbar-hide p-4">
       {/* Theme toggle in corner */}
       <div className="absolute top-6 right-6 z-10">
         <ThemeToggle />
